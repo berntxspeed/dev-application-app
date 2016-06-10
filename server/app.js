@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 require('./models/Application.js');
 var Application = mongoose.model('Application');
+var port = process.env.PORT || 8081;
 
 var candidate = require('./static/candidate.js');
 
@@ -60,6 +61,6 @@ app.post('/apply.json',function(req,res){
 
 });
 
-app.listen(8081, function(){
+app.listen(port, function(){
   console.log('listening on port 8081');
 });
