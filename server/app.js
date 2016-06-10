@@ -30,7 +30,7 @@ function checkApplyJSON(jsonToCheck){
 
 mongoose.connect('mongodb://localhost:27017/devApplications');
 
-app.use( express.static('client/pages') );
+app.use( express.static('client') );
 app.use( bodyParser.json() );
 
 app.get('/job.json',function(req,res){
