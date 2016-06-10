@@ -28,7 +28,7 @@ function checkApplyJSON(jsonToCheck){
   return 'pass';
 }
 
-mongoose.connect('mongodb://localhost:27017/devApplications');
+mongoose.connect('mongodb://devUser1:Zx10fxdl@candidate.64.mongolayer.com:10612,candidate.21.mongolayer.com:11112/app52002001');
 
 app.use( express.static('client') );
 app.use( bodyParser.json() );
