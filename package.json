@@ -4,7 +4,8 @@
   "description": "allows prospective candidates for the open dev position to apply for the job",
   "main": "server/app.js",
   "scripts": {
-    "test": "node server/app.js"
+    "test": "node server/app.js",
+    "start": "node server/app.js"
   },
   "author": "Bernt",
   "license": "ISC",
