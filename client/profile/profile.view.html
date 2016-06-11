@@ -22,11 +22,13 @@
   <h1>You are not authorized to view this page.</h1>
 </div>
 
-<div class="container" ng-show="vm.authenticated">
+<div class="container" ng-show="vm.admin">
   <h1>Current Development Engineer Applications:</h1>
+  <a class="btn btn-primary" ng-click="vm.refreshApplications()">Refresh</a>
+  <br />
 </div>
 
-<div class="container list-group-item" ng-repeat="app in vm.apps" ng-show="vm.authenticated">
+<div class="container list-group-item" ng-repeat="app in vm.apps" ng-show="vm.admin">
   <h3>{{ app.name }}</h3>
   <blockquote>
     <a ng-href="mailto:{{ app.email }}">{{ app.email }}</a>

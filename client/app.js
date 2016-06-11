@@ -283,6 +283,20 @@
 
     vm.user = {};
 
+    vm.refreshApplications = function(alert){
+      meanData.getApps()
+        .success(function(data) {
+          vm.admin = true;
+          vm.apps = data;
+          if(alert) alert('Updated Applications!');
+        })
+        .error(function(e){
+          vm.admin = false;
+          console.log(e);
+          if(alert) alert('error updating applications');
+        });
+    }
+
     meanData.getProfile()
       .success(function(data) {
         vm.authenticated = true;
@@ -293,13 +307,7 @@
         console.log(e);
       });
 
-    meanData.getApps()
-      .success(function(data) {
-        vm.apps = data;
-      })
-      .error(function(e){
-        console.log(e);
-      });
+    vm.refreshApplications();
 
   }
 
