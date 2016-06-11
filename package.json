@@ -26,7 +26,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node server/app.js"
+    "test": "node server/app.js",
+    "start": "MONGO_USER=bernt MONGO_PASS=fxdl97 node server/app.js"
   },
   "repository": {
     "type": "git",
