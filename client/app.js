@@ -182,7 +182,7 @@
       authentication
         .login(vm.credentials)
         .error(function(err){
-          alert(err);
+          alert('incorrect email or password\ntry again');
         })
         .then(function(){
           $location.path('profile');
