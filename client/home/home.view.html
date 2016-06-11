@@ -1,9 +1,13 @@
 <navigation></navigation>
 
-<div class="container">
+<div class="container" ng-controller="homeCtrl as vm">
 
-  <h1>Hello there</h1>
+  <h1>Development Job Applications Portal</h1>
+  <div ng-hide="vm.isLoggedIn">
+    <p>Won't you please <a href="login">sign in</a> or <a href="register">register</a>?</p>
+  </div>
 
-  <p>Won't you please <a href="login">sign in</a> or <a href="register">register</a>?</p>
-
+  <div ng-show="vm.isLoggedIn">
+    <p>Hi {{ vm.currentUser.name }}, click <a href="profile">here</a> to view current applications.</p>
+  </div>
 </div>

@@ -31,118 +31,23 @@
     $locationProvider.html5Mode(true);
   }
 
-  function run($rootScope, $location, authentication) {
+  function run($rootScope, $location, authentication, $window) {
     $rootScope.$on('$routeChangeStart', function(event, nextRoute, currentRoute) {
+      if(!authentication){
+        alert('authentication object is not defined!');
+        return;
+      }
       if ($location.path() === '/profile' && !authentication.isLoggedIn()) {
         $location.path('/');
       }
     });
+
   }
 
   angular
     .module('meanApp')
     .config(['$routeProvider', '$locationProvider', config])
-    .run(['$rootScope', '$location', 'authentication', run]);
-
-})();
-
-//login.controller.js
-(function () {
-
-  angular
-  .module('meanApp')
-  .controller('loginCtrl', loginCtrl);
-
-  loginCtrl.$inject = ['$location', 'authentication'];
-  function loginCtrl($location, authentication) {
-    var vm = this;
-
-    vm.credentials = {
-      email : "",
-      password : ""
-    };
-
-    vm.onSubmit = function () {
-      authentication
-        .login(vm.credentials)
-        .error(function(err){
-          alert(err);
-        })
-        .then(function(){
-          $location.path('profile');
-        });
-    };
-
-  }
-
-})();
-
-//register.controller.js
-(function () {
-
-  angular
-    .module('meanApp')
-    .controller('registerCtrl', registerCtrl);
-
-  registerCtrl.$inject = ['$location', 'authentication'];
-  function registerCtrl($location, authentication) {
-    var vm = this;
-
-    vm.credentials = {
-      name : "",
-      email : "",
-      password : ""
-    };
-
-    vm.onSubmit = function () {
-      console.log('Submitting registration');
-      authentication
-        .register(vm.credentials)
-        .error(function(err){
-          alert(err);
-        })
-        .then(function(){
-          $location.path('profile');
-        });
-    };
-
-  }
-
-})();
-
-//navigation.controller.js
-(function () {
-
-  angular
-    .module('meanApp')
-    .controller('navigationCtrl', navigationCtrl);
-
-  navigationCtrl.$inject = ['$location','authentication'];
-  function navigationCtrl($location, authentication) {
-    var vm = this;
-
-    vm.isLoggedIn = authentication.isLoggedIn();
-
-    vm.currentUser = authentication.currentUser();
-
-  }
-
-})();
-
-//navigation.directive.js
-(function () {
-
-  angular
-    .module('meanApp')
-    .directive('navigation', navigation);
-
-  function navigation () {
-    return {
-      restrict: 'EA',
-      templateUrl: '/common/directives/navigation/navigation.template.html',
-      controller: 'navigationCtrl as navvm'
-    };
-  }
+    .run(['$rootScope', '$location', 'authentication', '$window', run]);
 
 })();
 
@@ -257,6 +162,112 @@
 
 })();
 
+//login.controller.js
+(function () {
+
+  angular
+  .module('meanApp')
+  .controller('loginCtrl', loginCtrl);
+
+  loginCtrl.$inject = ['$location', 'authentication'];
+  function loginCtrl($location, authentication) {
+    var vm = this;
+
+    vm.credentials = {
+      email : "",
+      password : ""
+    };
+
+    vm.onSubmit = function () {
+      authentication
+        .login(vm.credentials)
+        .error(function(err){
+          alert(err);
+        })
+        .then(function(){
+          $location.path('profile');
+        });
+    };
+
+  }
+
+})();
+
+//register.controller.js
+(function () {
+
+  angular
+    .module('meanApp')
+    .controller('registerCtrl', registerCtrl);
+
+  registerCtrl.$inject = ['$location', 'authentication'];
+  function registerCtrl($location, authentication) {
+    var vm = this;
+
+    vm.credentials = {
+      name : "",
+      email : "",
+      password : ""
+    };
+
+    vm.onSubmit = function () {
+      console.log('Submitting registration');
+      authentication
+        .register(vm.credentials)
+        .error(function(err){
+          alert(err);
+        })
+        .then(function(){
+          $location.path('profile');
+        });
+    };
+
+  }
+
+})();
+
+//navigation.controller.js
+(function () {
+
+  angular
+    .module('meanApp')
+    .controller('navigationCtrl', navigationCtrl);
+
+  navigationCtrl.$inject = ['$location','authentication'];
+  function navigationCtrl($location, authentication) {
+    var vm = this;
+
+    vm.isLoggedIn = authentication.isLoggedIn();
+
+    vm.currentUser = authentication.currentUser();
+
+    vm.logout = function(){
+      authentication.logout();
+      alert("you've been successfully logged out");
+      $location.path('/');
+    };
+
+  }
+
+})();
+
+//navigation.directive.js
+(function () {
+
+  angular
+    .module('meanApp')
+    .directive('navigation', navigation);
+
+  function navigation () {
+    return {
+      restrict: 'EA',
+      templateUrl: '/common/directives/navigation/navigation.template.html',
+      controller: 'navigationCtrl as navvm'
+    };
+  }
+
+})();
+
 //home.controller.js
 (function() {
 
@@ -264,8 +275,12 @@
     .module('meanApp')
     .controller('homeCtrl', homeCtrl);
 
-    function homeCtrl () {
+    homeCtrl.$inject = ['authentication'];
+    function homeCtrl (authentication) {
+      var vm = this;
       console.log('Home controller is running');
+      vm.isLoggedIn = authentication.isLoggedIn();
+      vm.currentUser = authentication.currentUser();
     }
 
 })();
@@ -288,12 +303,11 @@
         .success(function(data) {
           vm.admin = true;
           vm.apps = data;
-          if(alert) alert('Updated Applications!');
+          console.log('refreshed applications');
         })
         .error(function(e){
           vm.admin = false;
           console.log(e);
-          if(alert) alert('error updating applications');
         });
     }
 

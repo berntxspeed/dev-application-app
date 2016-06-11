@@ -1,0 +1,6 @@
+[done]-fix global refresh on any page but home
+[done]-if user is already logged in don't display signup and register
+[done]-add logout button
+-add user visual feedback when user hits refresh
+-sort applications in reverse order in view
+-add date added on backend to app save process

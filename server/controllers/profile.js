@@ -13,6 +13,9 @@ module.exports.profileRead = function(req, res) {
     User
       .findById(req.payload._id)
       .exec(function(err, user) {
+        if(err) return res.status(401).json({
+          "message" : "UnauthorizedError: no user by that id found"
+        });
         res.status(200).json(user);
       });
   }

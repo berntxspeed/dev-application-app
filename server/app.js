@@ -1,3 +1,5 @@
+var dev = true;
+
 var express = require('express');
 var app = express();
 var path = require('path');
@@ -29,6 +31,7 @@ require('./config/passport.js');
 
 var mongoUser = process.env.MONGO_USER;
 var mongoPass = process.env.MONGO_PASS;
+//var mongoURI = 'mongodb://localhost:27017/devJob';
 var mongoURI = 'mongodb://'+mongoUser+':'+mongoPass+'@candidate.64.mongolayer.com:10612,candidate.21.mongolayer.com:11112/app52002001';
 mongoose.connect(mongoURI, function(err){
   if(err) {
@@ -53,7 +56,7 @@ app.use(function (err, req, res, next) {
 
 app.get('/',function(req,res){
   res.sendFile( path.join(__dirname,'../client','index.html') );
-})
+});
 
 // api routes
 app.get('/api/job.json',function(req,res){
@@ -69,7 +72,7 @@ app.get('/api/profile.json',auth,ctrlProfile.profileRead);
 app.post('/api/register.json', ctrlAuth.register);
 app.post('/api/login.json', ctrlAuth.login);
 
-if(0){
+if(!dev){
   // production error handler
   // no stacktraces leaked to user
   app.use(function(err, req, res, next) {
@@ -77,6 +80,10 @@ if(0){
       res.send('error: '+err.message);
   });
 }
+
+app.get('*',function(req,res){
+  res.sendFile( path.join(__dirname,'../client','index.html') );
+});
 
 app.listen(port, function(){
   console.log('listening on port 8081');

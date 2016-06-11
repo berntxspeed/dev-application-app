@@ -24,7 +24,7 @@
 
 <div class="container" ng-show="vm.admin">
   <h1>Current Development Engineer Applications:</h1>
-  <a class="btn btn-primary" ng-click="vm.refreshApplications()">Refresh</a>
+  <a class="btn btn-primary" ng-click="vm.refreshApplications(true)">Refresh</a>
   <br />
 </div>
 
@@ -40,7 +40,7 @@
   <h5>Links to Projects</h5>
   <ol>
     <li ng-repeat="linkToProject in app.linksToProjects">
-      <a ng-href="linkToProject" target="_blank">linkToProject</a>
+      <a ng-href="{{ linkToProject }}" target="_blank">linkToProject</a>
     </li>
   </ol>
 </div>
