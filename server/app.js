@@ -1,70 +1,82 @@
 var express = require('express');
 var app = express();
+var path = require('path');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+
+var fs = require('fs');
+mySecret = fs.readFileSync(__dirname + '/private.key');
 
 var mongoose = require('mongoose');
 require('./models/Application.js');
+require('./models/Users.js');
 var Application = mongoose.model('Application');
 var port = process.env.PORT || 8081;
 
+//api controllers
+var ctrlProfile = require('./controllers/profile.js');
+var ctrlApplication = require('./controllers/application.js');
+var ctrlAuth = require('./controllers/authentication.js');
+
+var jwt = require('express-jwt');
+var auth = jwt({
+  secret: mySecret,
+  userProperty: 'payload'
+});
+
 var candidate = require('./static/candidate.js');
+require('./config/passport.js');
 
-function validEmail(email){
-  var x = email;
-  var atpos = x.indexOf("@");
-  var dotpos = x.lastIndexOf(".");
-  if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
-    return false;
-  }
-  return true;
-}
-
-function checkApplyJSON(jsonToCheck){
-  if( !jsonToCheck.name || typeof(jsonToCheck.name) !== 'string' ) return 'non-existent or invalid parameter - name';
-  if( !jsonToCheck.email || typeof(jsonToCheck.email) !== 'string' || !validEmail(jsonToCheck.email) ) return 'non-existent or invalid parameter - email';
-  if( !jsonToCheck.blurbAboutMe || typeof(jsonToCheck.blurbAboutMe) !== 'string' ) return 'non-existent or invalid parameter - blurbAboutMe';
-  if( !jsonToCheck.linkToResume || typeof(jsonToCheck.linkToResume) !== 'string' ) return 'non-existent or invalid parameter - linkToResume';
-  if( !jsonToCheck.linksToProjects || !Array.isArray(jsonToCheck.linksToProjects) ) return 'non-existent or invalid parameter - linksToProjects';
-  return 'pass';
-}
-
-mongoose.connect('mongodb://devUser:Zx10fxdl@candidate.64.mongolayer.com:10612,candidate.21.mongolayer.com:11112/app52002001', function(err){
+var mongoUser = process.env.MONGO_USER;
+var mongoPass = process.env.MONGO_PASS;
+var mongoURI = 'mongodb://'+mongoUser+':'+mongoPass+'@candidate.64.mongolayer.com:10612,candidate.21.mongolayer.com:11112/app52002001';
+mongoose.connect(mongoURI, function(err){
   if(err) {
-    console.log('failed to connect to mongodb');
+    console.log('failed to connect to mongodb: '+err);
+    console.log('using URI : '+mongoURI);
     process.exit(1);
   }
 });
 
-app.use( express.static('client') );
+app.use( passport.initialize() );
+app.use( express.static( path.join(__dirname, '../client') ) );
 app.use( bodyParser.json() );
 
-app.get('/job.json',function(req,res){
+// error handlers
+// Catch unauthorised errors
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401);
+    res.json({"message" : err.name + ": " + err.message});
+  }
+});
+
+app.get('/',function(req,res){
+  res.sendFile( path.join(__dirname,'../client','index.html') );
+})
+
+// api routes
+app.get('/api/job.json',function(req,res){
   res.json(candidate);
 });
 
-app.post('/apply.json',function(req,res){
-  console.log('got request on /apply.json from host: '+req.headers.host+' with user-agent: '+req.headers['user-agent']+
-  ' with body of: '+JSON.stringify(req.body));
+app.get('/api/apps.json',auth,ctrlApplication.getApps);
+app.post('/api/apply.json',ctrlApplication.apply);
 
-  if( checkApplyJSON(req.body) !== 'pass' ){
-    //bad request, try again
-    return res.status(500).send('bad request:'+checkApplyJSON(req.body));
-  }
+app.get('/api/profile.json',auth,ctrlProfile.profileRead);
 
-  var application = new Application;
-  application.name = req.body.name;
-  application.email = req.body.email;
-  application.blurbAboutMe = req.body.blurbAboutMe;
-  application.linkToResume = req.body.linkToResume;
-  application.linksToProjects = req.body.linksToProjects;
+// authentication
+app.post('/api/register.json', ctrlAuth.register);
+app.post('/api/login.json', ctrlAuth.login);
 
-  application.save(function(err){
-    if(err) return res.status(500).send('error writing to db');
-
-    return res.send('thanks for applying, you will be hearing back from us soon');
+if(0){
+  // production error handler
+  // no stacktraces leaked to user
+  app.use(function(err, req, res, next) {
+      res.status(err.status || 500);
+      res.send('error: '+err.message);
   });
-
-});
+}
 
 app.listen(port, function(){
   console.log('listening on port 8081');

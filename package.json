@@ -1,17 +1,41 @@
 {
-  "name": "dev-application",
+  "name": "devapplication",
   "version": "1.0.0",
-  "description": "allows prospective candidates for the open dev position to apply for the job",
+  "description": "",
   "main": "server/app.js",
+  "dependencies": {
+    "cookie-parser": "^1.3.5",
+    "debug": "^2.1.3",
+    "express": "^4.11.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-ng-html2js": "^0.2.2",
+    "gulp": "^3.9.1",
+    "body-parser": "^1.10.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-watch": "^4.3.6",
+    "gulp-uglify": "^1.5.3",
+    "gulp-ng-annotate": "^1.1.0",
+    "jade": "^1.9.2",
+    "morgan": "^1.5.3",
+    "mongoose": "^4.4.20",
+    "jsonwebtoken": "^5.7.0",
+    "express-jwt": "^3.4.0",
+    "passport": "^0.2.2",
+    "serve-favicon": "^2.2.1",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {},
   "scripts": {
-    "test": "node server/app.js",
-    "start": "node server/app.js"
+    "test": "node server/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/berntxspeed/dev-application-app.git"
   },
   "author": "Bernt",
   "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.15.1",
-    "express": "^4.13.4",
-    "mongoose": "^4.4.20"
-  }
+  "bugs": {
+    "url": "https://github.com/berntxspeed/dev-application-app/issues"
+  },
+  "homepage": "https://github.com/berntxspeed/dev-application-app#readme"
 }

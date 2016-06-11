@@ -1,0 +1,44 @@
+<navigation></navigation>
+
+<div class="container" ng-show="vm.authenticated">
+  <div class="row">
+
+     <div class="col-md-6">
+
+      <h1>Your profile</h1>
+
+      <p>Full name</p>
+      <blockquote>{{ vm.user.name }}</blockquote>
+
+      <p>Email</p>
+      <blockquote>{{ vm.user.email }}</blockquote>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="container" ng-hide="vm.authenticated">
+  <h1>You are not authorized to view this page.</h1>
+</div>
+
+<div class="container" ng-show="vm.authenticated">
+  <h1>Current Development Engineer Applications:</h1>
+</div>
+
+<div class="container list-group-item" ng-repeat="app in vm.apps" ng-show="vm.authenticated">
+  <h3>{{ app.name }}</h3>
+  <blockquote>
+    <a ng-href="mailto:{{ app.email }}">{{ app.email }}</a>
+  </blockquote>
+  <p>
+    {{ app.blurbAboutMe }}
+  </p>
+  <a ng-href="{{ app.linkToResume }}" target="_blank">Resume</a>
+  <h5>Links to Projects</h5>
+  <ol>
+    <li ng-repeat="linkToProject in app.linksToProjects">
+      <a ng-href="linkToProject" target="_blank">linkToProject</a>
+    </li>
+  </ol>
+</div>
