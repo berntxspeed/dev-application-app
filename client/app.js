@@ -196,8 +196,7 @@
       return $http.post('/api/register.json', user)
         .success(function(data){
         saveToken(data.token);
-        })
-        .error(console.log('couldnt register username'));
+      });
     };
 
     login = function(user) {
