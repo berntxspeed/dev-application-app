@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 
 var fs = require('fs');
-mySecret = fs.readFileSync(__dirname + '/private.key');
+mySecret = process.env.MY_SECRET || fs.readFileSync(__dirname + '/private.key').toString();
 
 var mongoose = require('mongoose');
 require('./models/Application.js');
@@ -29,11 +29,8 @@ var auth = jwt({
 var candidate = require('./static/candidate.js');
 require('./config/passport.js');
 
-//var mongoUser = process.env.MONGO_USER;
-//var mongoPass = process.env.MONGO_PASS;
-var mongoCreds = fs.readFileSync(__dirname + '/heroku-mongo.mongocreds').toString().trim();
-var mongoUser = mongoCreds.split(':')[0];
-var mongoPass = mongoCreds.split(':')[1];
+var mongoUser = process.env.MONGO_USER || fs.readFileSync(__dirname + '/heroku-mongo.mongocreds').toString().trim().split(':')[0];
+var mongoPass = process.env.MONGO_PASS || fs.readFileSync(__dirname + '/heroku-mongo.mongocreds').toString().trim().split(':')[1];
 //var mongoURI = 'mongodb://localhost:27017/devJob';
 var mongoURI = 'mongodb://'+mongoUser+':'+mongoPass+'@candidate.64.mongolayer.com:10612,candidate.21.mongolayer.com:11112/app52002001';
 mongoose.connect(mongoURI, function(err){
