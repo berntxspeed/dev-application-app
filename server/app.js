@@ -29,8 +29,11 @@ var auth = jwt({
 var candidate = require('./static/candidate.js');
 require('./config/passport.js');
 
-var mongoUser = process.env.MONGO_USER;
-var mongoPass = process.env.MONGO_PASS;
+//var mongoUser = process.env.MONGO_USER;
+//var mongoPass = process.env.MONGO_PASS;
+var mongoCreds = fs.readFileSync(__dirname + '/heroku-mongo.mongocreds').toString().trim();
+var mongoUser = mongoCreds.split(':')[0];
+var mongoPass = mongoCreds.split(':')[1];
 //var mongoURI = 'mongodb://localhost:27017/devJob';
 var mongoURI = 'mongodb://'+mongoUser+':'+mongoPass+'@candidate.64.mongolayer.com:10612,candidate.21.mongolayer.com:11112/app52002001';
 mongoose.connect(mongoURI, function(err){
