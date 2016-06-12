@@ -4,3 +4,9 @@
 -add user visual feedback when user hits refresh
 -sort applications in reverse order in view
 -add date added on backend to app save process
+-make app more secure by:
+  -removing mongo creds from package.json
+  -removing private.key from root directory on github
+-fix signout from home page - it gets hung and doesn't update the page
+-be clearer about failed login attempt
+-add feature for applicants to view just their application
