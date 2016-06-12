@@ -3,7 +3,8 @@ var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 
 var fs = require('fs');
-mySecret = fs.readFileSync(__dirname + '/../private.key');
+var mySecret = process.env.MY_SECRET || fs.readFileSync(__dirname + '/../private.key');
+
 
 var userSchema = new mongoose.Schema({
   email: {

@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 
 var fs = require('fs');
-mySecret = process.env.MY_SECRET || fs.readFileSync(__dirname + '/private.key').toString();
+var mySecret = process.env.MY_SECRET || fs.readFileSync(__dirname + '/private.key');
 
 var mongoose = require('mongoose');
 require('./models/Application.js');
